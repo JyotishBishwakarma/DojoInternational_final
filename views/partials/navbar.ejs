@@ -1,0 +1,146 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-primary sticky-top">
+  <div class="container-fluid">
+    <!-- Brand/Logo -->
+    <!--<a class="navbar-brand" href="#">
+      <img src="images/logo-small.jpg" width="150" height="auto" alt="">
+    </a>-->
+
+    <!-- Toggle Button for Mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <!-- Use ms-auto to push the links to the right -->
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/aboutus">About Us</a>
+        </li>
+
+        <!-- Dropdown Menu -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Our Services
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="/japanese_language">Japanese Language Training</a>
+            <a class="dropdown-item" href="/work_japan">Work in Japan Consultation</a>
+            <a class="dropdown-item" href="/visa_processing">Documentation Guidance and Visa Processing</a>
+            <a class="dropdown-item" href="/admission_guidance">Study in Japan</a>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact Us</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="openForm">Free Consultation</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Popup Form -->
+<div id="popupForm" class="popup" style="display: none;">
+  <div class="popup-content">
+    <span id="closeForm" class="close">&times;</span> <!-- Close button -->
+    <h2>Free Consultation</h2>
+    <form id="consultationForm" action="/request-consultation" method="POST">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone Number:</label>
+        <input type="text" class="form-control" id="phone" name="phone" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input type="email" class="form-control" id="email" name="email">
+      </div>
+      <div class="mb-3">
+        <label for="message" class="form-label">Message:</label>
+        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <!-- Placeholder for the success message -->
+    <div id="messageContainer" style="display: none; margin-top: 20px; padding: 10px; background-color: #d4edda; color: #155724; border-radius: 5px;"></div>
+  </div>
+</div>
+
+<script>
+  // Get references to elements
+  const openFormButton = document.getElementById('openForm');
+  const popupForm = document.getElementById('popupForm');
+  const closeForm = document.getElementById('closeForm');
+  const consultationForm = document.getElementById('consultationForm');
+  const messageContainer = document.getElementById('messageContainer');
+
+  // Open popup form when the button is clicked
+  openFormButton.addEventListener('click', () => {
+    popupForm.style.display = 'flex'; // Show the popup form
+  });
+
+  // Close popup form when the close button is clicked
+  closeForm.addEventListener('click', () => {
+    popupForm.style.display = 'none'; // Hide the popup form
+    messageContainer.style.display = 'none'; // Hide message
+  });
+
+  // Close popup when clicking outside the form
+  window.addEventListener('click', (event) => {
+    if (event.target === popupForm) {
+      popupForm.style.display = 'none'; // Hide the popup form
+      messageContainer.style.display = 'none'; // Hide message
+    }
+  });
+
+  // Handle form submission using AJAX (no page reload)
+  consultationForm.addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(consultationForm);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch('/request-consultation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        messageContainer.textContent = '✅ Your consultation request has been submitted successfully!';
+        messageContainer.style.backgroundColor = '#d4edda';
+        messageContainer.style.color = '#155724';
+        consultationForm.reset(); // Clear form fields
+        
+      } else {
+        messageContainer.textContent = '❌ Error submitting your request. Please try again.';
+        messageContainer.style.backgroundColor = '#f8d7da';
+        messageContainer.style.color = '#721c24';
+      }
+      messageContainer.style.display = 'block';
+
+      // Hide the popup form after 3 seconds
+      setTimeout(() => {
+        popupForm.style.display = 'none';
+        messageContainer.style.display = 'none';
+      }, 3000);
+    } catch (error) {
+      messageContainer.textContent = '❌ Network error! Please check your internet connection.';
+      messageContainer.style.backgroundColor = '#f8d7da';
+      messageContainer.style.color = '#721c24';
+      messageContainer.style.display = 'block';
+    }
+  });
+</script>
+

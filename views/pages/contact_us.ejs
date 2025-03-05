@@ -1,0 +1,98 @@
+<% layout('layouts/boilerplate') %> <!-- Specify the layout file -->
+    <div class="container">
+        <section class="hero">
+            <h1>Contact Us</h1>
+            <p>We’re here to help! Get in touch with us for any inquiries.</p>
+        </section>
+
+        <section class="contact-form">
+            <h2>📩 Get in Touch</h2>
+            <p>Fill out the form below, and our team will get back to you as soon as possible.</p>
+
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" placeholder="Enter the subject" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn bg-primary">🚀 Send Message</button>
+            </form>
+        </section>
+
+        <section class="contact-info">
+            <h2>📍 Our Office</h2>
+            <p>Visit us or reach out through the details below:</p>
+            <p><strong>📞 Phone:</strong> +977-9847398691</p>
+            <p><strong>✉️ Email:</strong> contact@dojointernational.com</p>
+            <p><strong>📍 Address:</strong> Koteshwor, Kathmandu, Nepal</p>
+        </section>
+    </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const contactForm = document.getElementById("contactForm");
+            const messageBox = document.createElement("div");
+            messageBox.style.marginTop = "15px";
+            messageBox.style.padding = "10px";
+            messageBox.style.display = "none";
+            contactForm.appendChild(messageBox);
+    
+            contactForm.addEventListener("submit", async function (event) {
+                event.preventDefault(); // Stop default form submission
+    
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData.entries());
+    
+                try {
+                    const response = await fetch("/send-email", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(data),
+                    });
+    
+                    if (response.ok) {
+                        messageBox.textContent = "✅ Message sent successfully! We will get back to you soon.";
+                        messageBox.style.backgroundColor = "#d4edda";
+                        messageBox.style.color = "#155724";
+                        contactForm.reset(); // Clear form fields
+                    } else {
+                        messageBox.textContent = "❌ Error occurred while sending the message. Please try again.";
+                        messageBox.style.backgroundColor = "#f8d7da";
+                        messageBox.style.color = "#721c24";
+                    }
+                    messageBox.style.display = "block";
+                } catch (error) {
+                    messageBox.textContent = "❌ Network error! Please check your internet connection.";
+                    messageBox.style.backgroundColor = "#f8d7da";
+                    messageBox.style.color = "#721c24";
+                    messageBox.style.display = "block";
+                }
+            });
+        });
+    </script>
+    
+    
+        
+
+    
