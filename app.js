@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 
 
 // Set the views directory (optional, default is './views')
-app.set('views', './views');
+app.set('views', path.join(__dirname, 'views'));
 
 // Serve static files (CSS, JS, images)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -134,8 +134,9 @@ app.post('/send-email', (req, res) => {
   });
 });
 
-/*app.listen(3000, () => {
+/*
+app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
 });*/
 
-module.exports.handler = serverless(app); // Export as a Netlify function
+module.exports = app; 
