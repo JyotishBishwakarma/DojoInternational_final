@@ -70,6 +70,7 @@ app.get('/admission_guidance', (req, res) => {
 
 // Handle form submission and send email
 app.post("/request-consultation", (req, res) => {
+  console.log(`email:`+process.env.EMAIL);
   const { name, phone, email, message } = req.body;
   console.log(`name: ${name}, phone: ${phone}, email: ${email}, message: ${message}`);
 
@@ -134,9 +135,9 @@ app.post('/send-email', (req, res) => {
   });
 });
 
-/*
+
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
-});*/
+});
 
-module.exports = app; 
+//module.exports = app; 
